@@ -1,4 +1,10 @@
-
+//
+//  ViewController.m
+//  MyJSPatch
+//
+//  Created by djx on 2016/11/17.
+//  Copyright © 2016年 ycq. All rights reserved.
+//
 
 autoConvertOCType(1)
 
@@ -53,12 +59,12 @@ require('UIViewController,UIScrollView,NSMutableArray,UILabel,NSString,UIColor,U
 
 defineClass('UIScrollViewHelper: NSObject', {
             // 实例方法
-            init: function() {
+    init: function() {
             self = self.super().init();
             console.log("UIScrollViewHelper init");
             return self;
             }
-            }, {
+        }, {
             // 类方法
             layoutScrollView: function(scrollView, subviewsArray, isVertical) {
             
@@ -70,18 +76,15 @@ defineClass('UIScrollViewHelper: NSObject', {
             var firstTopLeft = {
             x:firstView.frame().x,
             y:firstView.frame().y
-            };
-            
+        };
             var currentLeft = firstTopLeft.x;
             var currentTop = firstTopLeft.y;
             
             for (var i=0; i<subviewsArray.length; i++) {
-            
-            var viewInfoDict = subviewsArray[i];
-            var view = viewInfoDict["view"];
-            var padding = viewInfoDict["padding"];
-            
-            if (isVertical) {
+                var viewInfoDict = subviewsArray[i];
+                var view = viewInfoDict["view"];
+                var padding = viewInfoDict["padding"];
+        if (isVertical) {
             view.setFrame({x: (scrollView.frame().width - view.frame().width) / 2.0,
                           y: currentTop + padding,
                           width: view.frame().width,
@@ -91,32 +94,28 @@ defineClass('UIScrollViewHelper: NSObject', {
             currentTop += padding;
             
             currentLeft = view.frame().x;
-            }
-            else {
-            view.setFrame({x: currentLeft + padding,
+            }else{
+                view.setFrame({x: currentLeft + padding,
                           y: currentTop,
                           width: view.frame().width,
                           height: view.frame().height});
             
-            currentLeft += view.frame().width;
-            currentLeft += padding;
-            
-            currentTop = view.frame().y;
+                currentLeft += view.frame().width;
+                currentLeft += padding;
+                currentTop = view.frame().y;
             }
-            
             scrollView.addSubview(view);
-            }
+        }
             
-            if (isVertical) {
+        if (isVertical) {
             scrollView.setContentSize({width: scrollView.frame().width, height: currentTop});
-            }
-            else {
+        }else {
             scrollView.setContentSize({width: currentLeft, height: scrollView.frame().height});
-            }
+        }
             
-            subviewsArray = null;
-            }
-            })
+        subviewsArray = null;
+    }
+})
 
 //Objective-C 里的常量/枚举不能直接在 JS 上使用，可以直接在 JS 上用具体值代替，
 //或者在 JS 上重新定义同名的全局变量：
@@ -131,7 +130,7 @@ defineClass('ViewController', {
   handleBtn: function(sender) {
     var tableViewCtrl = JPTableViewController.alloc().init()
     require('UIColor');
-    self.view().setBackgroundColor(UIColor.greenColor());
+    self.view().setBackgroundColor(UIColor.orangeColor());
     self.navigationController().pushViewController_animated(tableViewCtrl, YES)
   }
 })
@@ -140,10 +139,12 @@ defineClass('JPTableViewController : UITableViewController <UIAlertViewDelegate>
   dataSource: function() {
     var data = self.data();
     if (data) return data;
-    var data = [];
-    for (var i = 0; i < 20; i ++) {
-      data.push("cell from js " + i);
-    }
+//    var data = [];
+//    for (var i = 0; i < 20; i ++) {
+//      data.push("cell from js " + i);
+//    }
+    require('NSMutableArray');
+    var data = NSMutableArray.arrayWithObjects("第1个功能点，简单控件的使用", "第3个功能点，地图的使用", "第3个功能点", "第4个功能点", "第5个功能点", "第6个功能点", "第7个功能点", "第8个功能点", null);
     self.setData(data)
     return data;
   },
@@ -167,9 +168,14 @@ defineClass('JPTableViewController : UITableViewController <UIAlertViewDelegate>
   },
   tableView_didSelectRowAtIndexPath: function(tableView, indexPath) {
     require('UIViewController');
-    var vc = MyViewController.alloc().init();
-    self.navigationController().pushViewController_animated(vc, YES);
-  },
+        if(indexPath.row() == 0){
+            var vc = MyViewController.alloc().init();
+            self.navigationController().pushViewController_animated(vc, YES);
+        }else if(indexPath.row() == 1){
+            var vc = MapViewController.alloc().init();
+            self.navigationController().pushViewController_animated(vc, YES);
+            }
+        },
   alertView_willDismissWithButtonIndex: function(alertView, idx) {
     console.log('click btn ' + alertView.buttonTitleAtIndex(idx).toJS())
   }
@@ -195,3 +201,19 @@ defineClass('MyViewController : UIViewController', {
         self.view().setBackgroundColor(UIColor.yellowColor());
     }
 })
+
+
+defineClass('MapViewController : UIViewController', {
+    viewDidLoad: function() {
+        self.super().viewDidLoad();
+        require('UIColor');
+        self.view().setBackgroundColor(UIColor.yellowColor());
+            
+//        require('MKMapView');
+//        var mapView = MKMapView.alloc().init();
+//        mapView.setFrame({x:10, y:74, width:355, height:500});
+//        self.view().addSubview(mapView);
+    },
+})
+
+

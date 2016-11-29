@@ -30,7 +30,7 @@
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
     
-    [[UINavigationBar appearance] setBackgroundImage:nil forBarMetrics:UIBarMetricsCompact];
+    [[UINavigationBar appearance] setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     return YES;
 }
 
